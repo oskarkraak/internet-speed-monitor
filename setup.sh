@@ -26,7 +26,7 @@ EOF
 chmod +x "$SCRIPT_DIR/run_speedtest.py"
 
 # Add run_speedtest.py to crontab to run every 5 minutes
-(crontab -l 2>/dev/null | grep -v "run_speedtest.py"; echo "*/1 * * * * $PYTHON_PATH $SCRIPT_DIR/run_speedtest.py") | crontab -
+(crontab -l 2>/dev/null | grep -v "run_speedtest.py"; echo "*/5 * * * * $PYTHON_PATH $SCRIPT_DIR/run_speedtest.py") | crontab -
 
 # Create a systemd service file for the Flask app
 SERVICE_FILE="/etc/systemd/system/internet-speed-monitor.service"
