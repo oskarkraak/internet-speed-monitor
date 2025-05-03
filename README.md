@@ -6,7 +6,7 @@ A simple internet speed monitor that
 
 ## How to use
 1. Clone this repository: `git clone https://github.com/oskarkraak/internet-speed-monitor.git`
-1. Run `internet-speed-monitor/setup.sh`
+1. Run `bash internet-speed-monitor/setup.sh`
 1. Navigate to your device on port 5000 in your web browser (`http://[YOUR_IP]:5000`)
 
 In case you want to see the logs, run `sudo journalctl -u internet-speed-monitor.service -f`.
