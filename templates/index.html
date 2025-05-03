@@ -7,28 +7,39 @@
 </head>
 <body>
   <h1>Internet Speed Over Time</h1>
-  <canvas id="speedChart" width="800" height="400"></canvas>
+  <select id="timeInterval" onchange="updateChart()">
+    <option value="2016">Last 7 days</option>
+    <option value="576">Last 48 hours</option>
+    <option value="288">Last 24 hours</option>
+    <option value="12">Last 1 hour</option>
+  </select>
+  <canvas id="speedChart" width="800" height="340"></canvas>
   <script>
-    fetch('/data')
-      .then(r => r.json())
-      .then(data => {
-        const labels = data.map(e => new Date(e.time).toLocaleTimeString());
-        const dl = data.map(e => e.download);
-        const ul = data.map(e => e.upload);
-        new Chart(document.getElementById('speedChart').getContext('2d'), {
-          type: 'line',
-          data: {
-            labels,
-            datasets: [
-              { label: 'Download (Mbps)', data: dl, fill: false },
-              { label: 'Upload (Mbps)', data: ul, fill: false }
-            ]
-          },
-          options: {
-            scales: { x: { display: true }, y: { beginAtZero: true } }
-          }
+    function updateChart() {
+      const interval = document.getElementById('timeInterval').value;
+      fetch(`/data?interval=${interval}`)
+        .then(r => r.json())
+        .then(data => {
+          const labels = data.map(e => new Date(e.time).toLocaleTimeString());
+          const dl = data.map(e => e.download);
+          const ul = data.map(e => e.upload);
+          const chart = new Chart(document.getElementById('speedChart').getContext('2d'), {
+            type: 'line',
+            data: {
+              labels,
+              datasets: [
+                { label: 'Download (Mbps)', data: dl, fill: false },
+                { label: 'Upload (Mbps)', data: ul, fill: false }
+              ]
+            },
+            options: {
+              scales: { x: { display: true }, y: { beginAtZero: true } }
+            }
+          });
         });
-      });
+    }
+    // Initialize chart with default interval
+    updateChart();
   </script>
 </body>
 </html>
