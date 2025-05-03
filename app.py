@@ -1,9 +1,11 @@
 from flask import Flask, jsonify, render_template
 import sqlite3
+import os
 
 app = Flask(__name__)
 
-DB = '/home/pi/speedtest/data.db'
+BASEDIR = os.path.abspath(os.path.dirname(__file__))
+DB = os.path.join(BASEDIR, 'data.db')
 
 def get_data(limit=288):  # last 288 tests ≈ 24 hours @5 min intervals
     conn = sqlite3.connect(DB)
