@@ -3,7 +3,7 @@
 # Update and install required packages
 sudo apt update
 sudo apt install -y python3 python3-pip sqlite3 nginx git
-sudo pip3 install speedtest-cli flask
+sudo apt install speedtest-cli python3-flask
 
 # Get the directory of the current script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
