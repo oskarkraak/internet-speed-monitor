@@ -7,17 +7,23 @@ app = Flask(__name__)
 BASEDIR = os.path.abspath(os.path.dirname(__file__))
 DB = os.path.join(BASEDIR, 'data.db')
 
-def get_data(limit=288):  # default to last 288 tests ≈ 24 hours @5 min intervals
+def get_data(limit=288):  # last 288 tests ≈ 24 hours @5 min intervals
     conn = sqlite3.connect(DB)
     c = conn.cursor()
     c.execute("SELECT timestamp, download_mbps, upload_mbps, ping_ms FROM results ORDER BY id DESC LIMIT ?", (limit,))
     rows = c.fetchall()
     conn.close()
+    # reverse so oldest first
     return list(reversed(rows))
 
 @app.route('/data')
 def data():
-    limit = int(request.args.get('interval', 288))  # Get interval from query parameter, default to 288
+    try:
+        limit = int(request.args.get('interval', 288))
+    except ValueError:
+        return jsonify({'error': 'interval must be an integer between 1 and 2016'}), 400
+    if not 1 <= limit <= 2016:
+        return jsonify({'error': 'interval must be an integer between 1 and 2016'}), 400
     rows = get_data(limit)
     return jsonify([{
         'time': ts,

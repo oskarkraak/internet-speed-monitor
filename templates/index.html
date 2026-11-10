@@ -15,6 +15,7 @@
   </select>
   <canvas id="speedChart" width="800" height="340"></canvas>
   <script>
+    let chart;
     function updateChart() {
       const interval = document.getElementById('timeInterval').value;
       fetch(`/data?interval=${interval}`)
@@ -23,7 +24,14 @@
           const labels = data.map(e => new Date(e.time).toLocaleTimeString());
           const dl = data.map(e => e.download);
           const ul = data.map(e => e.upload);
-          const chart = new Chart(document.getElementById('speedChart').getContext('2d'), {
+          if (chart) {
+            chart.data.labels = labels;
+            chart.data.datasets[0].data = dl;
+            chart.data.datasets[1].data = ul;
+            chart.update();
+            return;
+          }
+          chart = new Chart(document.getElementById('speedChart').getContext('2d'), {
             type: 'line',
             data: {
               labels,
